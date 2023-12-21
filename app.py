@@ -13,7 +13,7 @@ app.add_url_rule('/dynamic', 'dynamic_route', dynamical_routing_test)
 # home --> form to login
 @app.route('/')
 def hello_world():
-    VERSION = 34
+    VERSION = 36
     content = f'''
       <html>
         <body>     
