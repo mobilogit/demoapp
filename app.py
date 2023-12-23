@@ -39,9 +39,7 @@ def login():
     if request.method == 'POST':
         user = request.form['user_name']
         return redirect(url_for('success', name=user))
-  if request.method == 'POST':
-        user = request.form['user_age']
-        return redirect(url_for('success', name=age))
+
 	
     else:
         user = request.args.get('name')
