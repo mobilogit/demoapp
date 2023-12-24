@@ -17,7 +17,7 @@ def hello_world():
     content = f'''
       <html>
         <body>     
-          <h1>APP Version:{ VERSION }</h1>
+          <h1>DEV APP Version:{ VERSION }</h1>
           <form action = { url_for("login") } method = "post">
             <p>Enter Name:</p>
             <p><input type = "text" name = "user_name" /></p>
