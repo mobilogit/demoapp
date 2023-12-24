@@ -66,4 +66,4 @@ jobs:
         with:
           app-name: 'mobiloapp'
           slot-name: 'mobiloapp-dev'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F3B67A8AB2824472B00DC2B7D2A4812A }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4C84BFD1BECB45C2AEF7D3CE86EAD798 }}
