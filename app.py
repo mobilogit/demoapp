@@ -7,8 +7,6 @@ app = Flask(__name__)
 def dynamical_routing_test():
    return f'Dynamically added route<br><a href={ url_for("hello_world") }>take me home</a>'
 
-# adding dynamically a new route
-app.add_url_rule('/dynamic', 'dynamic_route', dynamical_routing_test)
 
 # home --> form to login
 @app.route('/')
