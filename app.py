@@ -2,6 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for
 import time
 from math import sqrt
 
+from azure.identity import DefaultAzureCredential
+from azure.mgmt.applicationinsights import ApplicationInsightsManagementClient
+import os
+
+
+
+
+
 app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -47,3 +55,6 @@ def loop(seconds):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
