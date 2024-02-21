@@ -6,7 +6,7 @@ from azure.identity import DefaultAzureCredential
 from azure.mgmt.applicationinsights import ApplicationInsightsManagementClient
 import os
 
-sub_id = os.getenv("AZURE_SUBSCRIPTION_ID")
+sub_id = os.getenv("3fc9e330-956a-47be-87cd-87f7810435b5")
 client = ApplicationInsightsManagementClient(credential=DefaultAzureCredential(), subscription_id=sub_id)
 
 
