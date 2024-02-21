@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for
 import time
 from math import sqrt
+
+
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.applicationinsights import ApplicationInsightsManagementClient
 import os
 
-sub_id = os.getenv("3fc9e330-956a-47be-87cd-87f7810435b5")
-client = ApplicationInsightsManagementClient(credential=DefaultAzureCredential(), subscription_id=sub_id)
-app = Flask(__name__)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
