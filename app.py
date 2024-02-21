@@ -1,56 +1,50 @@
-from flask import Flask, url_for, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
+import time
+from math import sqrt
 
-# Use name of current module (__name__) as argument.
 app = Flask(__name__)
 
-# function defining a dynamically added routing entry
-def dynamical_routing_test():
-   return f'Dynamically added route<br><a href={ url_for("hello_world") }>take me home</a>'
+@app.route('/', methods=['GET', 'POST'])
+def index():
 
-# adding dynamically a new route
-app.add_url_rule('/dynamic', 'dynamic_route', dynamical_routing_test)
+  if request.method == 'POST':
+    seconds = request.form.get('seconds')
+    duration = '---'
+    if seconds.isdigit():
+      return redirect(url_for('loop', seconds=seconds))
+  else:
+    seconds = 3
+    duration = request.args.get('duration')
+    if not duration:
+       duration = '---'
 
-# home --> form to login
-@app.route('/')
-def hello_world():
-    VERSION = 37
-    content = f'''
-      <html>
-        <body>     
-          <h1>APP Version:{ VERSION }</h1>
-          <form action = { url_for("login") } method = "post">
-            <p>Enter Name:</p>
-            <p><input type = "text" name = "user_name" /></p>
-            <p><input type = "submit" value = "submit" /></p>
-             <p>Enter Your Age:</p>
-            <p><input type = "text" name = "user_age" /></p>
-            <p><input type = "submit" value = "submit" /></p> 
-     
-          </form>     
-        <p><a href={ url_for("dynamic_route") }>dynamic link</a></p>
-        </body>
-      </html>
+  content = f'''
+    <html>
+      <body>     
+        <h1>CPU LOAD</h1>
+        <p>Last execution took {duration} seconds</p> 
+        <form action = { url_for("index") } method = "post">
+          <p>Enter number of seconds:</p>
+          <p><input type = "text" name = "seconds" value="{seconds}" /></p>
+          <p><input type = "submit" value = "submit" /></p>
+        </form>     
+      </body>
+    </html>
 '''
-    return content
 
-# login action --> redirect to success
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    if request.method == 'POST':
-        user = request.form['user_name']
-        return redirect(url_for('success', name=user))
+  return content
+  
 
-	
-    else:
-        user = request.args.get('name')
-        return redirect(url_for('success', name=user))
+@app.route('/loop/<seconds>')
+def loop(seconds):
+    start = time.time()
+    while time.time() - start < int(seconds):
+        value = sqrt(64*64*64*64*64)
 
-# show success and allow to go to home
-@app.route('/success/<name>')
-def success(name):
-    return f'Welcome {name} <p><a href={ url_for("hello_world") }>take me home</a></p>'
-
+    end = time.time()
+    duration = round(end - start, 2)
+    return redirect(url_for('index', duration=duration))
 
 
 if __name__ == '__main__':
-	app.run()
+    app.run(debug=True)
