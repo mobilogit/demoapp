@@ -7,7 +7,9 @@ from azure.mgmt.applicationinsights import ApplicationInsightsManagementClient
 import os
 
 
-
+def main():
+    credentials = DefaultAzureCredential()
+    SUBSCRIPTION_ID = os.environ.get("SUBSCRIPTION_ID", None)
 
 
 app = Flask(__name__)
