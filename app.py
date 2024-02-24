@@ -1,18 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for
+import os
 import time
+from applicationinsights.flask.ext import AppInsights
 from math import sqrt
 
-from azure.identity import DefaultAzureCredential
-from azure.mgmt.applicationinsights import ApplicationInsightsManagementClient
-import os
-
-
-def main():
-    credentials = DefaultAzureCredential()
-    SUBSCRIPTION_ID = os.environ.get("SUBSCRIPTION_ID", None)
-
-
 app = Flask(__name__)
+app.config['APPINSIGHTS_INSTRUMENTATIONKEY'] = os.getenv('APPINSIGHTS_INSTRUMENTATIONKEY')
+appinsights = AppInsights(app)
+
+# force flushing application insights handler after each request
+@app.after_request
+def after_request(response):
+    appinsights.flush()
+    return response
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
@@ -32,17 +33,30 @@ def index():
       <body>     
         <h1>CPU LOAD</h1>
         <p>Last execution took {duration} seconds</p> 
-        <form action = { url_for("index") } method = "post">
+        <form action={ url_for("index") } method = "post">
           <p>Enter number of seconds:</p>
           <p><input type = "text" name = "seconds" value="{seconds}" /></p>
           <p><input type = "submit" value = "submit" /></p>
         </form>     
+        <p><a href={ url_for("make_error") }>Make an error ;)</a></p>
       </body>
     </html>
 '''
 
   return content
   
+
+@app.route('/make_error')
+def make_error():
+    a=1+b
+    return  f'''
+    <html>
+      <body>     
+        <p><a href={{ url_for("index") }}>Go Home</a></p>
+      </body>
+    </html>
+'''
+
 
 @app.route('/loop/<seconds>')
 def loop(seconds):
@@ -57,6 +71,3 @@ def loop(seconds):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
