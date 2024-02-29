@@ -7,23 +7,21 @@ app = Flask(__name__)
 def dynamical_routing_test():
    return f'Dynamically added route<br><a href={ url_for("hello_world") }>take me home</a>'
 
+# adding dynamically a new route
+app.add_url_rule('/dynamic', 'dynamic_route', dynamical_routing_test)
 
 # home --> form to login
 @app.route('/')
 def hello_world():
-    VERSION = 37
+    VERSION = 40
     content = f'''
       <html>
         <body>     
-          <h1>DEV APP Version:{ VERSION }</h1>
+          <h1>{ VERSION }</h1>
           <form action = { url_for("login") } method = "post">
             <p>Enter Name:</p>
             <p><input type = "text" name = "user_name" /></p>
             <p><input type = "submit" value = "submit" /></p>
-             <p>Enter Your Age:</p>
-            <p><input type = "text" name = "user_age" /></p>
-            <p><input type = "submit" value = "submit" /></p> 
-     
           </form>     
         <p><a href={ url_for("dynamic_route") }>dynamic link</a></p>
         </body>
@@ -37,8 +35,6 @@ def login():
     if request.method == 'POST':
         user = request.form['user_name']
         return redirect(url_for('success', name=user))
-
-	
     else:
         user = request.args.get('name')
         return redirect(url_for('success', name=user))
