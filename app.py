@@ -1,73 +1,32 @@
-from flask import Flask, render_template, request, redirect, url_for
 import os
-import time
-from applicationinsights.flask.ext import AppInsights
-from math import sqrt
+
+from flask import (Flask, redirect, render_template, request,
+                   send_from_directory, url_for)
 
 app = Flask(__name__)
-app.config['APPINSIGHTS_INSTRUMENTATIONKEY'] = os.getenv('APPINSIGHTS_INSTRUMENTATIONKEY')
-appinsights = AppInsights(app)
 
-# force flushing application insights handler after each request
-@app.after_request
-def after_request(response):
-    appinsights.flush()
-    return response
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
+   print('Request for index page received')
+   return render_template('index.html')
 
-  if request.method == 'POST':
-    seconds = request.form.get('seconds')
-    duration = '---'
-    if seconds.isdigit():
-      return redirect(url_for('loop', seconds=seconds))
-  else:
-    seconds = 3
-    duration = request.args.get('duration')
-    if not duration:
-       duration = '---'
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-  content = f'''
-    <html>
-      <body>     
-        <h1>CPU LOAD</h1>
-        <p>Last execution took {duration} seconds</p> 
-        <form action={ url_for("index") } method = "post">
-          <p>Enter number of seconds:</p>
-          <p><input type = "text" name = "seconds" value="{seconds}" /></p>
-          <p><input type = "submit" value = "submit" /></p>
-        </form>     
-        <p><a href={ url_for("make_error") }>Make an error ;)</a></p>
-      </body>
-    </html>
-'''
+@app.route('/hello', methods=['POST'])
+def hello():
+   name = request.form.get('name')
 
-  return content
-  
-
-@app.route('/make_error')
-def make_error():
-    a=1+b
-    return  f'''
-    <html>
-      <body>     
-        <p><a href={{ url_for("index") }}>Go Home</a></p>
-      </body>
-    </html>
-'''
-
-
-@app.route('/loop/<seconds>')
-def loop(seconds):
-    start = time.time()
-    while time.time() - start < int(seconds):
-        value = sqrt(64*64*64*64*64)
-
-    end = time.time()
-    duration = round(end - start, 2)
-    return redirect(url_for('index', duration=duration))
+   if name:
+       print('Request for hello page received with name=%s' % name)
+       return render_template('hello.html', name = name)
+   else:
+       print('Request for hello page received with no name or blank name -- redirecting')
+       return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+   app.run()
